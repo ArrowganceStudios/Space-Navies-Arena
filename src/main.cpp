@@ -1,28 +1,46 @@
-#include <stdio.h>
-#include <allegro5/allegro.h>
+#include "Game.h"
+#include <time.h>
+#define internal static
 
+//Miliseconds used per single update, a time constant
+//TODO: Should be moved somewhere where we will hold constant project values at.
+const int MS_PER_UPDATE = 16;
+
+//Returns time elapsed since the launch of the program in miliseconds
+internal clock_t GetCurrentTime()
+{
+	clock_t time = clock();
+	return (time * 1000) / CLOCKS_PER_SEC; //that is set for system compatibility
+}
+
+//Main function
 int main(int argc, char **argv)
 {
-	ALLEGRO_DISPLAY *display = NULL;
+	Game game;
+	/*
+		Description of how does the loop work - http://gameprogrammingpatterns.com/game-loop.html#play-catch-up	
+	*/
 
-	if (!al_init()) {
-		fprintf(stderr, "failed to initialize allegro!\n");
-		return -1;
+	long int previous = GetCurrentTime();
+	long int lag = 0;
+
+	while (true)
+	{
+		long int current = GetCurrentTime();
+		long int elapsed = current - previous;
+		previous = current;
+		lag += elapsed;
+
+		game.ProcessInput();
+
+		while (lag >= MS_PER_UPDATE)
+		{
+			game.Update(); //MS_PER_UPDATE is used as a time constant
+			lag -= MS_PER_UPDATE;
+		}
+
+		game.Render();
 	}
-
-	display = al_create_display(640, 480);
-	if (!display) {
-		fprintf(stderr, "failed to create display!\n");
-		return -1;
-	}
-
-	al_clear_to_color(al_map_rgb(0, 0, 0));
-
-	al_flip_display();
-
-	al_rest(10.0);
-
-	al_destroy_display(display);
 
 	return 0;
 }
