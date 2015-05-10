@@ -6,13 +6,6 @@
 //TODO: Should be moved somewhere where we will hold constant project values at.
 const int MS_PER_UPDATE = 16;
 
-//Returns time elapsed since the launch of the program in miliseconds
-internal clock_t GetCurrentTime()
-{
-	clock_t time = clock();
-	return (time * 1000) / CLOCKS_PER_SEC; //that is set for system compatibility
-}
-
 //Main function
 int main(int argc, char **argv)
 {
@@ -24,7 +17,7 @@ int main(int argc, char **argv)
 	long int previous = GetCurrentTime();
 	long int lag = 0;
 
-	while (true)
+	while (game.Running())
 	{
 		long int current = GetCurrentTime();
 		long int elapsed = current - previous;
@@ -40,6 +33,7 @@ int main(int argc, char **argv)
 		}
 
 		game.Render();
+		game.Flush();
 	}
 
 	return 0;
