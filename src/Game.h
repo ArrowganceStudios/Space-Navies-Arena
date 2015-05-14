@@ -1,6 +1,9 @@
 #pragma once
+#include <stack>
 #include <vector>
 #include <allegro5/allegro.h>
+
+#include "States.h"
 
 /*
 	The general purpose game engine class.
@@ -31,7 +34,6 @@ public:
 		TBI
 		The following description is a subject to change
 		Render function iterates through the container of GameObjects calling render on each of them.
-		
 	*/
 	void Render();
 
@@ -52,10 +54,26 @@ public:
 	*/
 	void Flush();
 
+	/**
+		Pushes a new state on top of the stack of the states, so that it becomes a current state
+	*/
+	void ChangeState(State *newState);
+	/**
+		Pops current state out of the stack, so that we return to the previous state
+	*/
+	void LeaveState();
+
 private:
+	//state related
+	void StatesCleanup();
+	std::stack <State*> _states;
+
+	//input related
+	std::vector <int> _pressedKeys;
+
+	//loop related
 	void Exit() { _isRunning = false; }
 
-	std::vector <int> _pressedKeys;
 	bool _isRunning;
 
 	//Allegro related
@@ -77,4 +95,3 @@ private:
 	Game(const Game&);
 	const Game& operator=(const Game&);
 };
-

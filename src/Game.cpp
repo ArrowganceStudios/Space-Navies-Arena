@@ -82,10 +82,10 @@ Game::Game() : _isRunning(true)
 	SetupTimer();
 }
 
-
 Game::~Game()
 {
 	AllegroCleanup();
+	StatesCleanup();
 }
 
 void Game::ProcessInput()
@@ -110,7 +110,17 @@ void Game::Update()
 {
 	if (IsReadyToUpdate(_event))
 	{
-		//do stuff
+		//Temporary assertion
+		if (_states.size())
+		{
+			_states.top()->Update();
+		}
+		else
+		{
+			std::cerr << "_states stack is left empty" << std::endl;
+			std::cin.get();
+			Exit(); 
+		}
 	}
 	else if (WindowGotClosed(_event))
 	{
@@ -122,4 +132,33 @@ void Game::Flush()
 {
 	al_wait_for_event(_eventQueue, &_event);
 	al_flush_event_queue(_eventQueue);
+}
+
+void Game::ChangeState(State *newState)
+{
+	if (newState)
+	{
+		_states.push(newState);
+	}
+	else
+	{
+		//TODO: Handle exception when the provided state is a nullptr
+	}
+}
+
+void Game::LeaveState()
+{
+	_states.pop();
+}
+
+void Game::StatesCleanup()
+{
+	//iterates through each state, cleans up any memory allocations, deletes the state itself, 
+	//and removes it from the stack as well.
+	while (_states.size())
+	{
+		_states.top()->Cleanup();
+		delete _states.top();
+		_states.pop();
+	}
 }
