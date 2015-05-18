@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 
 /**
 	State is an abstract class of a game state, from which other states inherit. Instances of those
@@ -53,12 +52,12 @@ public:
 	/**
 		Resetting all meaningful variables to its default values (stored inside xxx.xxx file)
 	*/
-	void Init() {};
+	void Init();
 
 	/**
 		Deletes objects created by the use of dynamic memory allocation. (Ships and lightings if they did persist)
 	*/
-	void Cleanup() {};
+	void Cleanup();
 
 	/**
 		Update loop going through the object list, and updating each of them.
@@ -69,10 +68,10 @@ public:
 	/**
 		Draws Ships and lightings (and background).
 	*/
-	void Render() {};
+	void Render();
 
 	/**
 		Passes the Game::_pressedKeys to the player for further interpretation.
 	*/
-	void Input() {};
+	void Input();
 };

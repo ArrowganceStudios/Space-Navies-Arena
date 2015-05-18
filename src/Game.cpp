@@ -1,4 +1,7 @@
 #include "Game.h"
+
+#include <iostream>
+
 #define internal static
 
 //TODO: Should be moved somewhere else, for example - to some constant variables storage
@@ -134,11 +137,16 @@ void Game::Flush()
 	al_flush_event_queue(_eventQueue);
 }
 
-void Game::ChangeState(State *newState)
+void Game::ChangeState(State* newState)
 {
 	if (newState)
 	{
-		_states.push(newState);
+		//conversion to unique pointer
+		UniquePointerState uniquePointerNewState = std::unique_ptr<State>(newState);
+
+		//push to _states container with the use of std::move neccessary when performing 
+		//unq_ptr operations, since they have no copy constructor
+		_states.push(std::move(uniquePointerNewState));
 	}
 	else
 	{
@@ -158,7 +166,7 @@ void Game::StatesCleanup()
 	while (_states.size())
 	{
 		_states.top()->Cleanup();
-		delete _states.top();
+		//delete _states.top(); //can be removed, since we will be using unique pointers
 		_states.pop();
 	}
 }

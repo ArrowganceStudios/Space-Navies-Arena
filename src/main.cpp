@@ -1,5 +1,5 @@
 #include "Game.h"
-#include <time.h>
+
 #define internal static
 
 //Miliseconds used per single update, a time constant
@@ -10,10 +10,10 @@ const int MS_PER_UPDATE = 16;
 int main(int argc, char **argv)
 {
 	Game game;
+
 	/*
 		Description of how does the loop work - http://gameprogrammingpatterns.com/game-loop.html#play-catch-up	
 	*/
-
 	long int previous = GetCurrentTime();
 	long int lag = 0;
 

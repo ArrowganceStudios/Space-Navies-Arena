@@ -1,6 +1,8 @@
 #pragma once
 #include <stack>
-#include <vector>
+#include <forward_list>
+#include <memory>
+
 #include <allegro5/allegro.h>
 
 #include "States.h"
@@ -19,7 +21,16 @@
 class Game
 {
 public:
+	typedef std::unique_ptr<State> UniquePointerState; //not sure if this is really right place to put it
+
+	/**
+		Sets up allegro initialization
+	*/
 	Game();
+
+	/**
+		Performs cleaning of allegro objects
+	*/
 	~Game();
 
 	/**
@@ -55,9 +66,11 @@ public:
 	void Flush();
 
 	/**
-		Pushes a new state on top of the stack of the states, so that it becomes a current state
+		Performs a conversion from State to UniquePointerState, and pushes it on top of the stack
+		so that it becomes a current state
 	*/
-	void ChangeState(State *newState);
+	void ChangeState(State* newState);
+
 	/**
 		Pops current state out of the stack, so that we return to the previous state
 	*/
@@ -65,11 +78,11 @@ public:
 
 private:
 	//state related
+	std::stack <UniquePointerState> _states;
 	void StatesCleanup();
-	std::stack <State*> _states;
 
 	//input related
-	std::vector <int> _pressedKeys;
+	std::forward_list <int> _pressedKeys;
 
 	//loop related
 	void Exit() { _isRunning = false; }

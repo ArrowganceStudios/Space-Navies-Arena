@@ -82,8 +82,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Game.cpp" />
+    <ClCompile Include="..\src\GameState.cpp" />
     <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\States.cpp" />
+    <ClCompile Include="..\src\MenuState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Game.h" />
