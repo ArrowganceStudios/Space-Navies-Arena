@@ -4,10 +4,7 @@
 
 #define internal static
 
-//TODO: Should be moved somewhere else, for example - to some constant variables storage
-static int WIDTH = 800;
-static int HEIGHT = 600;
-static int FPS = 60;
+const double Game::MS_PER_UPDATE = (1.0 / FPS) * 1000;
 
 internal inline bool IsReadyToRender(ALLEGRO_EVENT_QUEUE *eventQueue, ALLEGRO_EVENT event)
 {
@@ -57,8 +54,7 @@ void Game::SetupEventQueue()
 
 void Game::SetupTimer()
 {
-	_timer = al_create_timer(1.0f / FPS); //MS_PER_UPDATE should be rather put as an argument here, but first
-										  //we need to create the storage for such kind of constants
+	_timer = al_create_timer(MS_PER_UPDATE);
 	al_register_event_source(_eventQueue, al_get_timer_event_source(_timer));
 	al_start_timer(_timer);
 }
@@ -120,6 +116,7 @@ void Game::Update()
 		}
 		else
 		{
+			//TODO: Handle this in a different way, as this is just bullshit
 			std::cerr << "_states stack is left empty" << std::endl;
 			std::cin.get();
 			Exit(); 
@@ -161,12 +158,11 @@ void Game::LeaveState()
 
 void Game::StatesCleanup()
 {
-	//iterates through each state, cleans up any memory allocations, deletes the state itself, 
-	//and removes it from the stack as well.
+	//iterates through each state, cleans up any memory allocations
+	//and removes states from the stack as well.
 	while (_states.size())
 	{
 		_states.top()->Cleanup();
-		//delete _states.top(); //can be removed, since we will be using unique pointers
 		_states.pop();
 	}
 }

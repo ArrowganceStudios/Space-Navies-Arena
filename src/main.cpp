@@ -2,16 +2,13 @@
 
 #define internal static
 
-//Miliseconds used per single update, a time constant
-//TODO: Should be moved somewhere where we will hold constant project values at.
-const int MS_PER_UPDATE = 16;
-
 //Main function
 int main(int argc, char **argv)
 {
 	Game game;
 
 	/*
+		TODO: All this mess below may be enclosed in a while loop and a single method
 		Description of how does the loop work - http://gameprogrammingpatterns.com/game-loop.html#play-catch-up	
 	*/
 	long int previous = GetCurrentTime();
@@ -26,10 +23,10 @@ int main(int argc, char **argv)
 
 		game.ProcessInput();
 
-		while (lag >= MS_PER_UPDATE)
+		while (lag >= Game::MS_PER_UPDATE)
 		{
 			game.Update(); //MS_PER_UPDATE is used as a time constant
-			lag -= MS_PER_UPDATE;
+			lag -= Game::MS_PER_UPDATE;
 		}
 
 		game.Render();

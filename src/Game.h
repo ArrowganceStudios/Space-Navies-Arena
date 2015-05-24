@@ -14,15 +14,13 @@
 
 	There should be only a single instance of the Game at the time.
 
-	NOTE: It should still be decided whether it will be a singleton, a local main variable or global.
+	TODO: It should still be decided whether it will be a singleton, a local main variable or global.
 
 */
 
 class Game
 {
 public:
-	typedef std::unique_ptr<State> UniquePointerState; //not sure if this is really right place to put it
-
 	/**
 		Sets up allegro initialization
 	*/
@@ -75,6 +73,21 @@ public:
 		Pops current state out of the stack, so that we return to the previous state
 	*/
 	void LeaveState();
+
+	//unique pointer for state type definition
+	typedef std::unique_ptr<State> UniquePointerState;
+
+	//game constants
+
+	enum Screen
+	{
+		WIDTH = 800,
+		HEIGHT = 600,
+		FPS = 60
+	};
+
+	//Miliseconds used per single update, a time constant
+	static const double MS_PER_UPDATE;
 
 private:
 	//state related
